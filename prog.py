@@ -74,12 +74,19 @@ def make_Blocks(mat):
 	matb=[[] for i in range(4)]
 	#on parourt chaque ligne de la matrice
 	for i in range(len(mat[0][:])-1):
-		#si la distance entre
+		#orthologue : qend(1) de i proche de qstart(0) i+1
 		if (abs(mat[1][i]-mat[0][i+1]) < 1000) and (abs(mat[2][i+1]-mat[3][i] > 1000)):
 			matb[0].append(mat[0][i])
 			matb[1].append(mat[1][i+1])
 			matb[2].append(mat[2][i])
 			matb[3].append(mat[3][i+1])
+
+		#paralogues : qend(1) de
+		if (abs(mat[1][i+1]-mat[0][i]) < 1000) and (abs(mat[2][i]-mat[3][i+1] > 1000)):
+			matb[0].append(mat[0][i+1])
+			matb[1].append(mat[1][i])
+			matb[2].append(mat[2][i+1])
+			matb[3].append(mat[3][i])
 
 	print len(matb[0][:])-1
 	#print matb[0]
@@ -87,6 +94,8 @@ def make_Blocks(mat):
 	for i in range(len(matb[0][:])-1):
 		plt.plot([matb[0][i], matb[1][i]],[matb[2][i], matb[3][i]], color = 'blue')
 	plt.show()
+
+	#ok pour les othologues
 
 
 m=plot_DotPlot('Alignment.txt')
