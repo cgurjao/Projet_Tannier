@@ -62,33 +62,67 @@ def plot_DotPlot(file_name):
 			#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'blue')
 
 
-	plt.xlabel('Q')
-	plt.ylabel('S')
-	plt.savefig("dotplot")
-	plt.show()
+	# plt.xlabel('Q')
+	# plt.ylabel('S')
+	# plt.savefig("dotplot")
+	# #plt.show()
 	return matf
 
 
 def make_Blocks(mat):
 	#on cree une matrice dans laquelle on aura regroupe les blocs (segments consecutifs)
 	matb=[[] for i in range(4)]
+
 	#on parourt chaque ligne de la matrice
-	for i in range(len(mat[0][:])-1):
-		#orthologue : qend(1) de i proche de qstart(0) i+1
-		if (abs(mat[1][i]-mat[0][i+1]) < 1000) and (abs(mat[2][i+1]-mat[3][i] > 1000)):
+	i=0
+	while i < (len(mat[0][:])-1):
+		print "i=",i
+		#orthologue (=diago) : qend(1) de i proche de qstart(0) i+1
+		#sstart (2) de i+1 proche de send(3) de i
+
+		#difference paralogue / orthologue : signe de la difference ssend[i]-start[i+1]
+
+		#paralogues (diago)
+		if((abs(mat[1][i]-mat[0][i+1]) < 1000) and ((mat[2][i+1]-mat[3][i]) < 500)):
+			print "----------- rentre"
+			j=i+1
+			while j<(len(mat[0][:])-1):
+			#on cherche jusqu'ou va le segment
+				if ((abs(mat[1][j]-mat[0][j+1]) < 1000) and ((mat[2][j+1]-mat[3][j]) < 500)):
+					j=j+1
+					print "---------j=",j
+				else:
+					break
+
 			matb[0].append(mat[0][i])
-			matb[1].append(mat[1][i+1])
+			matb[1].append(mat[1][j])
 			matb[2].append(mat[2][i])
-			matb[3].append(mat[3][i+1])
+			matb[3].append(mat[3][j])
 
-		#paralogues : qend(1) de
-		if (abs(mat[1][i+1]-mat[0][i]) < 1000) and (abs(mat[2][i]-mat[3][i+1] > 1000)):
-			matb[0].append(mat[0][i+1])
-			matb[1].append(mat[1][i])
-			matb[2].append(mat[2][i+1])
-			matb[3].append(mat[3][i])
+			i=j
 
-	print len(matb[0][:])-1
+		#orthologues
+		if ((abs(mat[1][i]-mat[0][i+1]) < 1000) and ((mat[3][i]-mat[2][i+1]) < 500)):
+			print "----------- rentre 2"
+			j=i+1
+			while j<(len(mat[0][:])-1):
+			#on cherche jusqu'ou va le segment
+				if ((abs(mat[1][j]-mat[0][j+1]) < 1000) and ((mat[3][j]-mat[2][j+1]) < 500)):
+					j=j+1
+					print "---------j=",j
+				else:
+					break
+
+			matb[0].append(mat[0][i])
+			matb[1].append(mat[1][j])
+			matb[2].append(mat[2][i])
+			matb[3].append(mat[3][j])
+
+			i=j
+
+		i=i+1
+
+	print "taille matb:",len(matb[0][:])
 	#print matb[0]
 	#print matb
 	for i in range(len(matb[0][:])-1):
@@ -99,4 +133,5 @@ def make_Blocks(mat):
 
 
 m=plot_DotPlot('Alignment.txt')
+print "taille matf", len(m[0][:])
 make_Blocks(m)
