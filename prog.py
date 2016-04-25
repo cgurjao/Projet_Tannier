@@ -97,14 +97,15 @@ def search_blocks(mat):
 				i = i+1
 			blocks_Q_end.append(mat[1][i])
 			blocks_S_end.append(mat[3][i])
-			blocks_type.append(0)
+			blocks_type.append(1)
 		i = i +1
 
 
-	blocks = np.array([blocks_Q_start,blocks_Q_end,blocks_S_start, blocks_S_end])
+	blocks = np.array([blocks_Q_start,blocks_Q_end,blocks_S_start, blocks_S_end, blocks_type])
 	for i in range(len(blocks[0])):
-		plt.plot([blocks[0][i], blocks[1][i]],[blocks[2][i], blocks[3][i]], color = 'red')
+		plt.plot([blocks[0][i], blocks[1][i]],[blocks[2][i], blocks[3][i]],  color = 'red')
 	plt.show()
+	print blocks
 	return blocks
 	#### blocks contient:
 	# - les quatres premieres lignes sont respectivements Q_start, Q_end, S_start, S_end
