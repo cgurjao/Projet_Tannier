@@ -4,6 +4,8 @@ import itertools
 import math as math
 import numpy as np
 
+
+#Read alignment file and return a list with Q_start,Q_end, S_start and S_end
 def read_File(file_name):
 	Q_start = []
 	Q_end = []
@@ -22,26 +24,24 @@ def read_File(file_name):
 		a = np.array([Q_start,Q_end,S_start, S_end])
 		a = a[:,a[1,:].argsort()]
 	return a
+	#table with four lines with Q_start,Q_end, S_start and S_end sorted according to Q_start
+
 
 def plot_DotPlot(file_name):
 	mat = read_File(file_name)
-	#contient 4 lignes: qstart qend sstart send
-	#Ordonne selon q_start
-
-	#N colonnes dans le fichier (1 start/1end = 1 ligne)
 	N = len(mat[0])
-	#matrice filtree = sans bruit
 	matf=[[] for i in range(4)]
 
 
-	#plt.plot([mat[0], mat[1]],[mat[2], mat[3]], color = 'green')
-	#plt.xlabel('Q')
-	#plt.ylabel('S')
-	#plt.savefig("Unfiltered")
-	#plt.close()
+	#To plot Unfiltered raw dot plot
+	"""plt.plot([mat[0], mat[1]],[mat[2], mat[3]], color = 'green')
+	plt.xlabel('Q')
+	plt.ylabel('S')
+	plt.savefig("Unfiltered") 
+	plt.close()"""
 	
 	for i in range(N-1):
-		#si suffisemment grand pour pas etre considere comme bruit pour paralogues = ceux dans la diago
+		#Look for paralogs
 		if math.sqrt((mat[0][i]-mat[1][i])**2+(mat[2][i]-mat[3][i])**2) > 13000:
 			#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'red')
 			matf[0].append(mat[0][i])
@@ -49,7 +49,7 @@ def plot_DotPlot(file_name):
 			matf[2].append(mat[2][i])
 			matf[3].append(mat[3][i])
 
-		#filtre orthologues
+		#look for orthologs
 		if abs(mat[0][i]-mat[1][i+1]) > 1000:
 			if abs(mat[2][i]-mat[3][i+1]) < 1000:
 				#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'green')
@@ -57,25 +57,26 @@ def plot_DotPlot(file_name):
 				matf[1].append(mat[1][i])
 				matf[2].append(mat[2][i])
 				matf[3].append(mat[3][i])
-		#else:
-			#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'blue')
 
-
-	plt.xlabel('Q')
+	#Plot filtered Dot plot without noise
+	"""plt.xlabel('Q')
 	plt.ylabel('S')
-	plt.savefig("Filtered")
-	plt.close()
+	plt.savefig("Filtered") 
+	plt.close()"""
 	return matf
+	#table with four lines with Q_start,Q_end, S_start and S_end sorted according to Q_start
 
-
+#Merge blocks 
 def search_blocks(mat):
 	N = len(mat[0])
-	i = 0
 	blocks_Q_start = []
 	blocks_Q_end = []
 	blocks_S_start = []
 	blocks_S_end = []
 	blocks_type = []
+
+	#Merge neighboor paralogs into a single block
+	i = 0
 	while i < N-1:
 		if abs(mat[0][i+1] - mat[0][i]) < 2000:
 			blocks_Q_start.append(mat[0][i])
@@ -87,7 +88,7 @@ def search_blocks(mat):
 			blocks_type.append(0)
 		i = i +1
 
-
+	#Merge neighboor orthologs into a single block
 	i = 0
 	while i < N-1:
 		if math.sqrt((mat[0][i]-mat[1][i])**2+(mat[2][i]-mat[3][i])**2) > 100000:
@@ -102,14 +103,17 @@ def search_blocks(mat):
 
 
 	blocks = np.array([blocks_Q_start,blocks_Q_end,blocks_S_start, blocks_S_end, blocks_type])
+	#To plot blocks
 	for i in range(len(blocks[0])):
 		plt.plot([blocks[0][i], blocks[1][i]],[blocks[2][i], blocks[3][i]],  color = 'red')
-	plt.show()
-	print blocks
+	plt.xlabel('Q')
+	plt.ylabel('S')
+	plt.savefig("Filtered_merged_blocks") #Plot filtered Dot plot without noise
+	plt.close()
 	return blocks
-	#### blocks contient:
-	# - les quatres premieres lignes sont respectivements Q_start, Q_end, S_start, S_end
-	# - la derniere ligne decrit le type de bloc : 0 pour les paralogues et 1 pour les orthologues
+	#### blocks is a table with:
+	# - The four first lines are Q_start, Q_end, S_start, S_end
+	# - the last line describe the type of block : 0 for paralogues and 1 for orthologs
 
 m=plot_DotPlot('Alignment.txt')
 search_blocks(m)
