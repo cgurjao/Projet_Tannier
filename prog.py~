@@ -108,7 +108,7 @@ def search_blocks(mat):
 	return blocks
 	#### blocks contient:
 	# - les quatres premieres lignes sont respectivements Q_start, Q_end, S_start, S_end
-	# - la derniere ligne decrit le type de bloc : 0 pour les paralogues et 1 pour les orthologues
+	# - la derniere ligne décrit le type de bloc : 0 pour les paralogues et 1 pour les orthologues
 
 m=plot_DotPlot('Alignment.txt')
 search_blocks(m)
