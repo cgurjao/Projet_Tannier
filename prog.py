@@ -103,9 +103,16 @@ def search_blocks(mat):
 
 
 	blocks = np.array([blocks_Q_start,blocks_Q_end,blocks_S_start, blocks_S_end, blocks_type])
-	#To plot blocks
+
+	f=open("filtered_merged_blocks.txt","w")
+
+	#To plot blocks and save it in a file
 	for i in range(len(blocks[0])):
 		plt.plot([blocks[0][i], blocks[1][i]],[blocks[2][i], blocks[3][i]],  color = 'red')
+		f.write("%d\t%d\t%d\t%d\n"%(blocks[0][i],blocks[1][i],blocks[2][i],blocks[3][i]))
+
+	f.close()
+	
 	plt.xlabel('Q')
 	plt.ylabel('S')
 	plt.savefig("Filtered_merged_blocks") #Plot filtered Dot plot without noise
