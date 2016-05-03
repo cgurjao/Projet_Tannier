@@ -5,7 +5,15 @@ import math as math
 import numpy as np
 import os
 
-def read_File(file_name):
+
+
+ 
+def read_File(alignment_file_name):
+	''' Take the alignment file as input 
+		and return a np.array with four lines 
+		for each line of the alignment file: 
+		Q_start, Q_end, S_start, S_end
+	'''
 	Q_start = []
 	Q_end = []
 	S_start = []
@@ -24,7 +32,12 @@ def read_File(file_name):
 		a = a[:,a[1,:].argsort()]
 	return a
 
+
+
 def getBlocksTable(file_name,unfiltered=False,filtered=False):
+	''' Take the alignment file as input, applies the read_File() fonction to get a matrix
+		and then take out the noise (considered as noise when the length is too small)
+	'''
 	mat = read_File(file_name)
 	#contient 4 lignes: qstart qend sstart send
 	#Ordonne selon q_start
@@ -70,6 +83,11 @@ def getBlocksTable(file_name,unfiltered=False,filtered=False):
 
 
 def search_blocks(mat):
+	''' Take the filtered matrix as input (without noise)
+		and concatenate the alignment to make blocks
+		Return an np.array with 5 lines : Q_start,Q_end,S_start, S_end, 
+		and the type of the block (0 for paralogues, 1 for orthologues)
+	'''
 	N = len(mat[0])
 	i = 0
 	blocks_Q_start = []
@@ -107,9 +125,7 @@ def search_blocks(mat):
 			plt.plot([blocks[0][i], blocks[1][i]],[blocks[2][i], blocks[3][i]],  color = 'red')
 	#plt.show()
 	return blocks
-	#### blocks contient:
-	# - les quatres premieres lignes sont respectivements Q_start, Q_end, S_start, S_end
-	# - la derniere ligne decrit le type de bloc : 0 pour les paralogues et 1 pour les orthologues
+
 	
 
 
@@ -179,3 +195,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+a=read_File('Alignment.txt')
+print "a",a
