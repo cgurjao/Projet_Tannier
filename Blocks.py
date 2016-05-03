@@ -18,7 +18,7 @@ def read_File(alignment_file_name):
 	Q_end = []
 	S_start = []
 	S_end = []
-	with open(file_name) as inf:
+	with open(alignment_file_name) as inf:
 		for line in inf:
 			parts = line.split()
 			li=line.strip()
@@ -48,16 +48,16 @@ def getBlocksTable(file_name,unfiltered=False,filtered=False):
 	matf=[[] for i in range(4)]
 
 
-	# plt.plot([mat[0], mat[1]],[mat[2], mat[3]], color = 'green')
-	# plt.xlabel('Q')
-	# plt.ylabel('S')
-	# plt.savefig("Unfiltered")
-	# plt.close()
+	plt.plot([mat[0], mat[1]],[mat[2], mat[3]], color = 'green')
+	plt.xlabel('Q')
+	plt.ylabel('S')
+	plt.savefig("Unfiltered")
+	plt.close()
 	
 	for i in range(N-1):
 		#si suffisemment grand pour pas etre considere comme bruit pour paralogues = ceux dans la diago
 		if math.sqrt(float((mat[0][i]-mat[1][i]))**2+float((mat[2][i]-mat[3][i]))**2) > 13000:
-			#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'red')
+			plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'red')
 			matf[0].append(mat[0][i])
 			matf[1].append(mat[1][i])
 			matf[2].append(mat[2][i])
@@ -66,7 +66,7 @@ def getBlocksTable(file_name,unfiltered=False,filtered=False):
 		#filtre orthologues
 		if abs(mat[0][i]-mat[1][i+1]) > 1000:
 			if abs(mat[2][i]-mat[3][i+1]) < 1000:
-				#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'green')
+				plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'green')
 				matf[0].append(mat[0][i])
 				matf[1].append(mat[1][i])
 				matf[2].append(mat[2][i])
@@ -75,10 +75,10 @@ def getBlocksTable(file_name,unfiltered=False,filtered=False):
 			#plt.plot([mat[0][i], mat[1][i]],[mat[2][i], mat[3][i]], color = 'blue')
 
 
-	# plt.xlabel('Q')
-	# plt.ylabel('S')
-	# plt.savefig("Filtered")
-	# plt.close()
+	plt.xlabel('Q')
+	plt.ylabel('S')
+	plt.savefig("Filtered")
+	plt.close()
 	return matf
 
 
@@ -197,5 +197,4 @@ if __name__ == '__main__':
     main()
 
 
-a=read_File('Alignment.txt')
-print "a",a
+a=getBlocksTable('Alignment.txt')
